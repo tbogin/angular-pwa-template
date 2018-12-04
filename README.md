@@ -1,27 +1,34 @@
-# Jokes
+# Angular PWA example
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.1.5.
+## Running the app
+Service workers do not work with `ng serve`
+To run application, run `http-server -p 8080 -c-1 dist/<project-name>`
 
-## Development server
+## Understanding manifest.json
+`name` - title
+`short_name` - abbreviated title if `name` is too long
+`start_url` - app's landing page
+`theme_color` - color that browser UI assumes on the site
+`background_color` - for which app icon is displayed
+`display` - specify whether browser UI should be hidden when users visit the site
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+## Adding PWA package to an Angular app
+`ng add @angular/pwa@v6-lts --project project-name`
 
-## Code scaffolding
+`SwUpdate` imported into app-component.ts, used to subscribe to updates
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+`ngsw-config.json` is where you cache info on api endpoint for pwa to work offline
 
-## Build
+"cacheConfig": {
+    "strategy": "freshness",
+    "maxSize": 20,
+    "maxAge": "1h",
+    "timeout": "5s"
+}
+In `ngsw-config`, checks api endpoint for updates before falling back on existing service worker cache if user is offline
+To check cache before network, use `"performance"` instead of `"freshness"`
+`maxSize` is max number of endpoint responses that will be cached by service worker
+`timeout` used in conjunction with strategy freshness
+`maxAge` - how long a cached response is valid
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+https://angular.io/guide/service-worker-getting-started
